@@ -11,6 +11,7 @@
 using namespace std;
 
 class DataStructures {
+	//creates struct storm with its attributes
 	struct Storm {
 		string name;
 		int level;
@@ -19,31 +20,14 @@ class DataStructures {
 		double safety;
 	};
 
-	Storm* minHeapName[25000];
-	int minHeapNameIndex;
+	
 	unordered_map<string, vector<Storm*>> mapByStorm;
+	map<string, double> mapBySafestCities;
+	map<double, string> mapBySafestCities2;
 	map<double, vector<string>> mapBySafetyIndex;
 	map<int, vector<string>> mapByCasualties;
 
-	void insertminHeapName(Storm* x) {
-		minHeapName[minHeapNameIndex] = x;
-		int child = minHeapNameIndex++;
-		int parent = (child - 1) / 2;
-		while (parent >= 0 && minHeapName[parent]->name > minHeapName[child]->name) {
-			Storm* y = minHeapName[parent];
-			minHeapName[parent] = minHeapName[child];
-			minHeapName[child] = y;
-			child = parent;
-			parent = (child - 1) / 2;
-		}
-	}
-
-	void sortMinHeapName() {
-		for (int i = 0; i < 25000; i++) {
-			cout << "Storm: " << minHeapName[i]->name << " | Level: " << minHeapName[i]->level << " | Casualties: " << minHeapName[i]->casualties << " | Location: "
-				<< minHeapName[i]->location << " | Safety Index: " << fixed << setprecision(2) << minHeapName[i]->safety << endl;
-		}
-	}
+	
 
 	void tempPrintAll(unordered_map<string, vector<Storm*>> m1) {
 		for (auto it : m1) {
@@ -103,7 +87,7 @@ class DataStructures {
 
 	}
 
-	void printSafety3(unordered_map<string, vector<Storm*>> m1, map<double, vector<string>> m2) {
+	void printSafety3(unordered_map<string, vector<Storm*>> m1, map<double, vector<string>> m2, map<string, double> m3, map<double, string> m4) {
 		for (auto it : m1) {
 			for (auto it2 : it.second) {
 				vector<string> v;
@@ -111,20 +95,36 @@ class DataStructures {
 				it3 = m2.find(it2->safety);
 				if (it3 == m2.end()) {
 					m2.insert(pair<double, vector<string>>(it2->safety, v));
-					m2[it2->safety].push_back(it.first);
+					m2[it2->safety].push_back(it2->location);
 				}
 				else {
-					m2[it2->safety].push_back(it.first);
+					m2[it2->safety].push_back(it2->location);
 				}
 
 			}
 		}
 		for (auto it : m2) {
 			for (auto it2 : it.second) {
-				cout << "Storm: " << it2 << " | Safety Index: " << setprecision(2) << fixed << it.first << endl;
+				map<string, double>::iterator it3;
+				it3 = m3.find(it2);
+				if (it3 == m3.end()) {
+					m3.insert(pair<string, double>(it2, it.first));
+				}
+				else {
+					m3[it2] += it.first;
+				}
 			}
-			break;
 		}
+		for (auto it : m3) {
+			m4.insert(pair<double, string>(it.second, it.first));
+		}
+		
+		map<double, string>::iterator it2;
+		it2 = m4.begin();
+		cout << "The safest city is " << it2->second << " with a cumulative safety index of " << it2->first << endl;
+		map<double, string>::reverse_iterator it3;
+		it3 = m4.rbegin();
+		cout << "The most dangerous city is " << it3->second << " with a cumulative safety index of " << it3->first << endl;
 	}
 
 	void printCasualties(unordered_map<string, vector<Storm*>> m1, map<int, vector<string>> m2) {
@@ -172,7 +172,6 @@ class DataStructures {
 public:
 	void loadData() {
 		vector<Storm*> v;
-		minHeapNameIndex = 0;
 		ifstream i;
 		i.open("StormData.csv");
 		string temp;
@@ -192,7 +191,7 @@ public:
 			curr->location = temp;
 			curr->safety = (curr->level * curr->casualties) / 30.0;
 			//insert into Heaps and Graph here
-			insertminHeapName(curr);
+			
 			unordered_map<string, vector<Storm*>>::iterator it;
 			it = mapByStorm.find(curr->name);
 			if (it == mapByStorm.end()) {
@@ -207,26 +206,32 @@ public:
 		
 	}
 
+	//prints all storms
 	void printAll() {
 		tempPrintAll(mapByStorm);
 	}
 
+	//prints all storms sorted by lowest to highest safety index
 	void printSafetyLow() {
 		printSafety(mapByStorm, mapBySafetyIndex);
 	}
 
+	//prints all storms sorted by highest to lowest safety index
 	void printSafetyHigh() {
 		printSafety2(mapByStorm, mapBySafetyIndex);
 	}
 
+	//prints the safest cities (the cities with the lowest safety index)
 	void printSafestCities() {
-		printSafety3(mapByStorm, mapBySafetyIndex);
+		printSafety3(mapByStorm, mapBySafetyIndex, mapBySafestCities, mapBySafestCities2);
 	}
 
+	//prints the casualties of each storm from highest to low
 	void printCasualtiesHigh() {
 		printCasualties(mapByStorm, mapByCasualties);
 	}
 
+	//search function that searches and prints storms with a certain name
 	void search(string name) {
 		searchByName(mapByStorm, name);
 	}
