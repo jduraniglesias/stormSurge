@@ -13,8 +13,8 @@ int main() {
 	//cout << endl;
 	//b.printSafetyHigh();
 	//cout << endl;
-	//b.printCasualtiesHigh();
-	b.printSafestCities();
+	b.printCasualtiesHigh();
+	//b.printSafestCities();
 	//b.search("Julia");
 	return 0;
 }

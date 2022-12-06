@@ -133,7 +133,7 @@ class DataStructures {
 		cout << "The most dangerous city is " << it3->second << " with a cumulative safety index of " << it3->first << endl;
 	}
 
-	//prints all the casualties of each storm
+	//prints the storms with the highest casualties
 	void printCasualties(unordered_map<string, vector<Storm*>> m1, map<int, vector<string>> m2) {
 		for (auto it : m1) {
 			for (auto it2 : it.second) {
@@ -154,7 +154,10 @@ class DataStructures {
 		map<int, vector<string>>::reverse_iterator it2;
 		for (it2 = m2.rbegin(); it2 != m2.rend(); it2++) {
 			for (int i = it2->second.size() - 1; i >= 0; i--) {
-				cout << "Storm: " << it2->second[i] << " | Casualties: " << setprecision(2) << fixed << it2->first << endl;
+				if (it2->first == 300) {
+					cout << "Storm: " << it2->second[i] << " | Casualties: " << setprecision(2) << fixed << it2->first << endl;
+				}
+				
 			}
 		}
 
