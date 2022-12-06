@@ -11,7 +11,7 @@
 using namespace std;
 
 class DataStructures {
-	//creates struct storm with its attributes
+	//creates struct storm with its data
 	struct Storm {
 		string name;
 		int level;
@@ -20,7 +20,7 @@ class DataStructures {
 		double safety;
 	};
 
-	
+	//creates necessary maps to store the storm's data
 	unordered_map<string, vector<Storm*>> mapByStorm;
 	map<string, double> mapBySafestCities;
 	map<double, string> mapBySafestCities2;
@@ -28,7 +28,7 @@ class DataStructures {
 	map<int, vector<string>> mapByCasualties;
 
 	
-
+	//goes through the unordered map of the storms and prints all their data
 	void tempPrintAll(unordered_map<string, vector<Storm*>> m1) {
 		for (auto it : m1) {
 			for (auto it2 : it.second) {
@@ -37,7 +37,7 @@ class DataStructures {
 		}
 	}
 
-
+	//goes through all of the storms and inserts them into the m2 which holds the safety index as its key and the vector of storm names as the key
 	void printSafety(unordered_map<string, vector<Storm*>> m1, map<double, vector<string>> m2) {
 		for (auto it : m1) {
 			for (auto it2 : it.second) {
@@ -54,6 +54,7 @@ class DataStructures {
 				
 			}
 		}
+		//it goes through m2 and prints all the data from lowest to highest
 		for (auto it : m2) {
 			for (auto it2 : it.second) {
 				cout << "Storm: " << it2 << " | Safety Index: " << setprecision(2) << fixed << it.first << endl;
@@ -61,6 +62,7 @@ class DataStructures {
 		}
 	}
 
+	//does the same as above but prints all the data from highest to lowest
 	void printSafety2(unordered_map<string, vector<Storm*>> m1, map<double, vector<string>> m2) {
 		for (auto it : m1) {
 			for (auto it2 : it.second) {
@@ -87,6 +89,7 @@ class DataStructures {
 
 	}
 
+	//goes through the unordered map with storms and stores the safety index of each storm that happened at a specific location
 	void printSafety3(unordered_map<string, vector<Storm*>> m1, map<double, vector<string>> m2, map<string, double> m3, map<double, string> m4) {
 		for (auto it : m1) {
 			for (auto it2 : it.second) {
@@ -103,6 +106,7 @@ class DataStructures {
 
 			}
 		}
+		//it then calculates the total safety index of every location where a storm occured and stores it in m3
 		for (auto it : m2) {
 			for (auto it2 : it.second) {
 				map<string, double>::iterator it3;
@@ -115,10 +119,12 @@ class DataStructures {
 				}
 			}
 		}
+		//it then stores this into m4 as we are looking to sort this from lowest to highest
 		for (auto it : m3) {
 			m4.insert(pair<double, string>(it.second, it.first));
 		}
 		
+		//it then prints out the city with the lowest safety index and then the city with the highest
 		map<double, string>::iterator it2;
 		it2 = m4.begin();
 		cout << "The safest city is " << it2->second << " with a cumulative safety index of " << it2->first << endl;
@@ -127,6 +133,7 @@ class DataStructures {
 		cout << "The most dangerous city is " << it3->second << " with a cumulative safety index of " << it3->first << endl;
 	}
 
+	//prints all the casualties of each storm
 	void printCasualties(unordered_map<string, vector<Storm*>> m1, map<int, vector<string>> m2) {
 		for (auto it : m1) {
 			for (auto it2 : it.second) {
@@ -153,6 +160,7 @@ class DataStructures {
 
 	}
 
+	//is a search function and searches the name of the storm and prints all the storms with said name and their data
 	void searchByName(unordered_map<string, vector<Storm*>> m1, string name) {
 		unordered_map<string, vector<Storm*>>::iterator it;
 		it = m1.find(name);
