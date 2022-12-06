@@ -135,6 +135,7 @@ class DataStructures {
 
 	//prints the storms with the highest casualties
 	void printCasualties(unordered_map<string, vector<Storm*>> m1, map<int, vector<string>> m2) {
+		//does the same as the print safety functions except with casualties
 		for (auto it : m1) {
 			for (auto it2 : it.second) {
 				vector<string> v;
@@ -157,7 +158,6 @@ class DataStructures {
 				if (it2->first == 300) {
 					cout << "Storm: " << it2->second[i] << " | Casualties: " << setprecision(2) << fixed << it2->first << endl;
 				}
-				
 			}
 		}
 
